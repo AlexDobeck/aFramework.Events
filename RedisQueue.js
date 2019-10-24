@@ -99,6 +99,10 @@ class RedisQueue extends EventEmitter {
         }
         await this.queueClient.disconnect();
     }
+
+    removeListener(eventName, listener){
+
+    }
 }
 
 let monitorQueue = function(queueName, redisClient, blockingRedisClient, emit, log){

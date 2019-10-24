@@ -8,7 +8,6 @@ const util = require('util');
 
 class RedisEvents extends EventEmitter {
     constructor(options, redis){
-
         if (redis){
             ioredis = redis;
         }
@@ -51,9 +50,24 @@ class RedisEvents extends EventEmitter {
     }
 
     async on(eventName, listener){
-        await this.subClient.subscribe(eventName);
+        if (super.listeners(eventName).length === 0){
+            await this.subClient.subscribe(eventName);
+        }
 
         return super.on(eventName, listener);
+    }
+
+    async removeListener(eventName, listener){
+        let preLength = super.listeners(eventName).length;
+        super.removeListener(eventName, listener);
+
+        let t = super.listeners(eventName);
+
+        if (preLength > 0 && super.listeners(eventName).length === 0){
+            await this.subClient.unsubscribe(eventName);
+        }
+
+        return this;
     }
 
     async once(eventName, listener){

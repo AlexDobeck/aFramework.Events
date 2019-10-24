@@ -60,7 +60,7 @@ describe('RedisEvents', function(){
                 .expects('publish')
                 .once()
                 .withExactArgs('test',
-                    {channel:'test', emittedAt:1571328769626, eventId:sinon.match(/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/), test:'args'});
+                    {emittedAt:1571328769626, eventId:sinon.match(/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/), test:'args'});
 
 
             events.emit('test', {test:"args"});
@@ -154,6 +154,141 @@ describe('RedisEvents', function(){
                 expect(test5Count).to.equal(0);
 
                 done();
+            })();
+        });
+    });
+    describe('removeListener', function() {
+        it('should do nothing if not listening', function (done) {
+            (async function () {
+                let events = new aEvents.RedisEvents({redis: {pubClient: pubMock.object, subClient: subMock.object}});
+
+                await events.removeListener('test', ()=>{});
+
+                done();
+
+            })();
+        });
+        it('should do nothing if multiple listeners are listening', function (done) {
+            (async function () {
+                let eventFunction;
+                subMock.expects('on', sinon.match.func).once().callsFake((...args) => {
+                    assert(args[0], 'message');
+                    assert.func(args[1]);
+                    eventFunction = args[1];
+                });
+                subMock.expects('subscribe').once().withExactArgs('test');
+
+
+                let events = new aEvents.RedisEvents({redis: {pubClient: pubMock.object, subClient: subMock.object}});
+
+                let func1 = () =>{
+                    return console.log('func1');
+                };
+                let func2 = () =>{
+                    return console.log('func2');
+                };
+
+                await events.on('test', func1);
+                await events.on('test', func2);
+
+                await events.removeListener('test', func1);
+
+                done();
+
+            })();
+        });
+        it('should unsubscribe if all listeners are removed', function (done) {
+            (async function () {
+                let eventFunction;
+                subMock.expects('on', sinon.match.func).once().callsFake((...args) => {
+                    assert(args[0], 'message');
+                    assert.func(args[1]);
+                    eventFunction = args[1];
+                });
+                subMock.expects('subscribe').once().withExactArgs('test');
+                subMock.expects('unsubscribe').once().withExactArgs('test');
+
+                let events = new aEvents.RedisEvents({redis: {pubClient: pubMock.object, subClient: subMock.object}});
+
+                let func1 = () =>{
+                    return console.log('func1');
+                };
+                let func2 = () =>{
+                    return console.log('func2');
+                };
+
+                await events.on('test', func1);
+                await events.on('test', func2);
+
+                await events.removeListener('test', func1);
+                await events.removeListener('test', func2);
+
+                done();
+
+            })();
+        });
+        it('should re-subscribe if all listeners are removed and added again', function (done) {
+            (async function () {
+                let eventFunction;
+                subMock.expects('on', sinon.match.func).once().callsFake((...args) => {
+                    assert(args[0], 'message');
+                    assert.func(args[1]);
+                    eventFunction = args[1];
+                });
+                subMock.expects('subscribe').once().withExactArgs('test');
+                subMock.expects('unsubscribe').once().withExactArgs('test');
+                subMock.expects('subscribe').once().withExactArgs('test');
+
+                let events = new aEvents.RedisEvents({redis: {pubClient: pubMock.object, subClient: subMock.object}});
+
+                let func1 = () =>{
+                    return console.log('func1');
+                };
+                let func2 = () =>{
+                    return console.log('func2');
+                };
+
+                await events.on('test', func1);
+                await events.on('test', func2);
+
+                await events.removeListener('test', func1);
+                await events.removeListener('test', func2);
+
+                await events.on('test', func1);
+                await events.on('test', func2);
+
+                done();
+
+            })();
+        });
+        it('should handle unsubscribing incorrectly by providing the same function twice', function (done) {
+            (async function () {
+                let eventFunction;
+                subMock.expects('on', sinon.match.func).once().callsFake((...args) => {
+                    assert(args[0], 'message');
+                    assert.func(args[1]);
+                    eventFunction = args[1];
+                });
+                subMock.expects('subscribe').once().withExactArgs('test');
+                //subMock.expects('unsubscribe').once().withExactArgs('test');
+
+                let events = new aEvents.RedisEvents({redis: {pubClient: pubMock.object, subClient: subMock.object}});
+
+                let func1 = () =>{
+                    return console.log('func1');
+                };
+                let func2 = () =>{
+                    return console.log('func2');
+                };
+
+                await events.on('test', func1);
+                await events.on('test', func2);
+
+                await events.removeListener('test', func1);
+                await events.removeListener('test', func1);
+
+                done();
+
             })();
         });
     });
