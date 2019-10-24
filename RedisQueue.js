@@ -18,7 +18,7 @@ class RedisQueue extends EventEmitter {
         };
 
         if (options && options.redis) {
-            this.queueKeyPredicate = options.queueKeyPredicate || '';
+            this.queueKeyPredicate = options.redis.queueKeyPredicate || '';
             if (this.queueKeyPredicate != '' && this.queueKeyPredicate.slice(-1) != ':') {
                 this.queueKeyPredicate += ':';
             }
@@ -48,7 +48,6 @@ class RedisQueue extends EventEmitter {
     }
 
     async emit(queueName, args){
-        args.channel = queueName;
         args.eventId = uuid();
         args.emittedAt = Date.now();
         await this.queueClient.setex(`${this.queueKeyPredicate + queueName}:lock:processing:${args.eventId}`, 60, null);

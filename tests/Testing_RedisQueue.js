@@ -67,7 +67,7 @@ describe('RedisQueues', function(){
             pubMock.expects('setex').once().withExactArgs(sinon.match(new RegExp('test:lock:processing:'+ guidRegex)), 60, null);
             pubMock.expects('set').once().withExactArgs(sinon.match(new RegExp('test:' + guidRegex)), sinon.match(
                 new RegExp(
-                    '{"test":"args","channel":"test","eventId":"' + guidRegex + '","emittedAt":1571328769626}'
+                    '{"test":"args","eventId":"' + guidRegex + '","emittedAt":1571328769626}'
                 )
             ));
             pubMock.expects('rpush').once().withExactArgs('test', sinon.match(new RegExp(guidRegex)));
