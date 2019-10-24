@@ -4,7 +4,6 @@
     <list default="true" id="aea186c3-65ec-4c0e-8a25-9ed71dda476c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/RedisEvents.js" beforeDir="false" afterPath="$PROJECT_DIR$/RedisEvents.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RedisQueue.js" beforeDir="false" afterPath="$PROJECT_DIR$/RedisQueue.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Testing_RedisEvents.js" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Testing_RedisEvents.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -38,25 +37,25 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="21833" />
+          <entry key="js" value="21844" />
           <entry key="json" value="270" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JSON" value="270" />
-          <entry key="JavaScript" value="21833" />
+          <entry key="JavaScript" value="21844" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/Testing_RedisEvents.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="272" column="78" selection-start-line="272" selection-start-column="78" selection-end-line="272" selection-end-column="78" />
+            <state relative-caret-position="237">
+              <caret line="276" column="34" lean-forward="true" selection-start-line="276" selection-start-column="34" selection-end-line="276" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -65,7 +64,7 @@
         <entry file="file://$PROJECT_DIR$/RedisEvents.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="201">
-              <caret line="61" selection-start-line="61" selection-end-line="61" />
+              <caret line="61" column="50" selection-start-line="61" selection-start-column="50" selection-end-line="61" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -79,11 +78,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RedisQueue.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+            <state relative-caret-position="232">
+              <caret line="90" column="62" lean-forward="true" selection-start-line="90" selection-start-column="62" selection-end-line="90" selection-end-column="62" />
             </state>
           </provider>
         </entry>
@@ -115,6 +114,7 @@
       <find>chai</find>
       <find>uuid</find>
       <find>publish</find>
+      <find>count</find>
     </findStrings>
     <replaceStrings>
       <replace>redisQueue</replace>
@@ -138,9 +138,9 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/tests/Testing_Base.js" />
         <option value="$PROJECT_DIR$/tests/Testing_RedisQueue.js" />
-        <option value="$PROJECT_DIR$/RedisQueue.js" />
-        <option value="$PROJECT_DIR$/RedisEvents.js" />
         <option value="$PROJECT_DIR$/tests/Testing_RedisEvents.js" />
+        <option value="$PROJECT_DIR$/RedisEvents.js" />
+        <option value="$PROJECT_DIR$/RedisQueue.js" />
       </list>
     </option>
   </component>
@@ -255,7 +255,7 @@
       <workItem from="1571253497589" duration="12688000" />
       <workItem from="1571327115487" duration="6858000" />
       <workItem from="1571847482827" duration="11166000" />
-      <workItem from="1571933499009" duration="14107000" />
+      <workItem from="1571933499009" duration="14887000" />
     </task>
     <servers />
   </component>
@@ -292,7 +292,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="80225000" />
+    <option name="totallyTimeSpent" value="81005000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -442,7 +442,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/RedisQueue.js</url>
-          <line>115</line>
+          <line>125</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="206" />
         </line-breakpoint>
@@ -454,7 +454,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/RedisQueue.js</url>
-          <line>93</line>
+          <line>107</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="208" />
         </line-breakpoint>
@@ -592,17 +592,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/RedisQueue.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/Testing_RedisEvents.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="237">
+          <caret line="276" column="34" lean-forward="true" selection-start-line="276" selection-start-column="34" selection-end-line="276" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -616,14 +616,14 @@
     <entry file="file://$PROJECT_DIR$/RedisEvents.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
+          <caret line="61" column="50" selection-start-line="61" selection-start-column="50" selection-end-line="61" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/Testing_RedisEvents.js">
+    <entry file="file://$PROJECT_DIR$/RedisQueue.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="272" column="78" selection-start-line="272" selection-start-column="78" selection-end-line="272" selection-end-column="78" />
+        <state relative-caret-position="232">
+          <caret line="90" column="62" lean-forward="true" selection-start-line="90" selection-start-column="62" selection-end-line="90" selection-end-column="62" />
         </state>
       </provider>
     </entry>

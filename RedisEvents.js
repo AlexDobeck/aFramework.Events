@@ -61,8 +61,6 @@ class RedisEvents extends EventEmitter {
         let preLength = super.listeners(eventName).length;
         super.removeListener(eventName, listener);
 
-        let t = super.listeners(eventName);
-
         if (preLength > 0 && super.listeners(eventName).length === 0){
             await this.subClient.unsubscribe(eventName);
         }

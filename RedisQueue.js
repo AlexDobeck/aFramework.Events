@@ -62,10 +62,24 @@ class RedisQueue extends EventEmitter {
         if (!this.queues[queueName]) {
             this.queues[queueName] = monitorQueue(this.queueKeyPredicate + queueName, this.queueClient, this.blockingQueueClientFunction(), super.emit.bind(this), this.log);
         } else {
-            this.queues[queueName].count ++;
+            this.queues[queueName].count++;
         }
 
         super.on(queueName, listener);
+    }
+
+    async removeListener(eventName, listener){
+        let preLength = super.listeners(eventName).length;
+        super.removeListener(eventName, listener);
+
+        if (preLength > 0 && super.listeners(eventName).length === 0){
+            let queue = this.queues[key];
+            clearInterval(queue.interval);
+            await queue.redis.disconnect();
+            queue.redis.isClosing = true;
+        }
+
+        return this;
     }
 
     async once(queueName, listener){
@@ -98,10 +112,6 @@ class RedisQueue extends EventEmitter {
             queue.redis.isClosing = true;
         }
         await this.queueClient.disconnect();
-    }
-
-    removeListener(eventName, listener){
-
     }
 }
 
