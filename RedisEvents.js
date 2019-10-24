@@ -66,7 +66,9 @@ class RedisEvents extends EventEmitter {
 
 
     async emit(event, args){
-        args.channel = event;
+        if (!args){
+            args = {};
+        }
         args.eventId = uuid();
         args.emittedAt = Date.now();
         await this.pubClient.publish(event, args);

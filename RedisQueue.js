@@ -48,6 +48,9 @@ class RedisQueue extends EventEmitter {
     }
 
     async emit(queueName, args){
+        if (!args){
+            args = {};
+        }
         args.eventId = uuid();
         args.emittedAt = Date.now();
         await this.queueClient.setex(`${this.queueKeyPredicate + queueName}:lock:processing:${args.eventId}`, 60, null);
