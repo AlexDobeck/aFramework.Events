@@ -7,12 +7,16 @@ RedisQueue provides Queuing functionality. Exactly one subscriber will recieve t
 RedisEvents provides Pub/Sub functionality. Every subscriber will recieve every event which occurs while they are listening. 
 
 ## Important Methods
-### async on(eventName, listener)
-When an event matching the eventName is emitted, the listener will be called with the arguments.
+### async Events.on(eventName, listener)
+When an event matching the eventName is emitted, the listener will be called and supplied the argument object.
 To begin listening to redis a network/io call needs to be made. If this method is not awaited, any events emitted on this client before that resolves will be lost. This is only a concern if you hope to immediately emit an event that the current client cares about.
 
-### async emit(eventName[, ...args])
-Emits the event and optional arguments, identical in usage to EventEmitter. Awaiting is optional unless you require a gaurntee that the event has been stored in redis before continuing.
+### Queue.on(eventName, listener)
+When an event matching the eventName is emitted, the listener will be called and supplied the argument object.
+This method will generate a new redis client (by using the blockingQueueClientFunction) and wait on an entry to appear in redis, looping only when an event has been successfully processed. If an error is thrown in the listener, the event will not be removed, instead being requeued once the delay ends. This will also cause the listener to stop listening so to prevent the client from endlessly churning on a single event.
+
+### async emit(eventName[, args])
+Emits the event and optional arguments object. Awaiting is optional unless you require a gaurntee that the event has been stored in redis before continuing.
 
 ### async close()
 Cleans up active redis connections and listeners.
