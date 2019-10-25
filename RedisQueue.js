@@ -83,6 +83,10 @@ class RedisQueue extends EventEmitter {
         return this;
     }
 
+    async off(eventName, listener){
+        return this.removeListener(eventName, listener);
+    }
+
     async once(queueName, listener){
         let wrap = ()=>{
             if (this.queues[queueName]) {

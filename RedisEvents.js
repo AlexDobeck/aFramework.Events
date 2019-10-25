@@ -68,6 +68,10 @@ class RedisEvents extends EventEmitter {
         return this;
     }
 
+    async off(eventName, listener){
+        return this.removeListener(eventName, listener)
+    }
+
     async once(eventName, listener){
         if (typeof listener !== 'function') {
             throw new Error('Invalid listener function:' + listener);
