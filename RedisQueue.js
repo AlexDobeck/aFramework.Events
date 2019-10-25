@@ -73,10 +73,11 @@ class RedisQueue extends EventEmitter {
         super.removeListener(eventName, listener);
 
         if (preLength > 0 && super.listeners(eventName).length === 0){
-            let queue = this.queues[key];
+            let queue = this.queues[eventName];
+            queue.redis.isClosing = true;
+            delete this.queues[eventName];
             clearInterval(queue.interval);
             await queue.redis.disconnect();
-            queue.redis.isClosing = true;
         }
 
         return this;

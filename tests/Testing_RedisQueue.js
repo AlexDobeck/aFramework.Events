@@ -189,6 +189,145 @@ describe('RedisQueues', function(){
 
             })();
         });
+        it('should disconnect blockingQueue when removeListener is called', function(done) {
+            (async function () {
+
+                pubMock.expects('get', 'test:id').once().returns(JSON.stringify({
+                    test: true,
+                    channel: 'test',
+                    eventId: 'newId'
+                }));
+                pubMock.expects('lrem', 'test:processing', 1, 'newId').once();
+                pubMock.expects('del', 'test:eventId');
+                pubMock.expects('disconnect').once();
+
+                let events = new aEvents.RedisQueue({
+                    redis: {
+                        queueClient: pubMock.object, blockingQueueClientFunction: () => {
+                            return {
+                                brpoplpush: () => {
+                                    return 'id'
+                                },
+                                disconnect: async () => {
+                                    await events.close();
+                                    done();
+                                }
+                            };
+                        }
+                    }
+                });
+
+                let onTest = async function(args){
+                    expect(args).to.eql({test: true, channel: 'test', eventId: 'newId'});
+                    await events.removeListener('test', onTest);
+                };
+
+                events.on('test', onTest);
+
+            })();
+        });
+        it('should not disconnect blockingQueue when removeListener is called with remaining listeners', function(done) {
+            (async function () {
+
+                pubMock.expects('get', 'test:id').twice().returns(JSON.stringify({
+                    test: true,
+                    channel: 'test',
+                    eventId: 'newId'
+                }));
+                pubMock.expects('lrem', 'test:processing', 1, 'newId').twice();
+                pubMock.expects('del', 'test:id').twice();
+                pubMock.expects('disconnect').once();
+
+                let events = new aEvents.RedisQueue({
+                    redis: {
+                        queueClient: pubMock.object, blockingQueueClientFunction: () => {
+                            return {
+                                brpoplpush: () => {
+                                    return 'id'
+                                },
+                                disconnect: async () => {
+                                }
+                            };
+                        }
+                    }
+                });
+
+                let onTest = sinon.spy(async function(args){
+                    expect(args).to.eql({test: true, channel: 'test', eventId: 'newId'});
+                    await events.removeListener('test', onTest);
+                });
+                let onTestCount2 = 2;
+                let onTest2 = async function(args){
+                    onTestCount2--;
+                    expect(args).to.eql({test: true, channel: 'test', eventId: 'newId'});
+
+                    if (onTestCount2 === 0){
+                        expect(onTest.callCount).to.equal(1);
+                        await events.close();
+                        done();
+                    }
+                };
+
+                events.on('test', onTest);
+                events.on('test', onTest2);
+            })();
+        });
+        it('should not handle removing and re-adding listeners', function(done) {
+            (async function () {
+
+                pubMock.expects('get', 'test:id').thrice().returns(JSON.stringify({
+                    test: true,
+                    channel: 'test',
+                    eventId: 'newId'
+                }));
+                pubMock.expects('lrem', 'test:processing', 1, 'newId').thrice();
+                pubMock.expects('del', 'test:id').thrice();
+                pubMock.expects('disconnect').once();
+
+                let disconnectSpy = sinon.spy();
+                let events = new aEvents.RedisQueue({
+                    redis: {
+                        queueClient: pubMock.object, blockingQueueClientFunction: () => {
+                            return {
+                                brpoplpush: () => {
+                                    return 'id'
+                                },
+                                disconnect: disconnectSpy
+                            };
+                        }
+                    }
+                });
+
+
+                let onTest = sinon.spy(async function(args){
+                    expect(args).to.eql({test: true, channel: 'test', eventId: 'newId'});
+                    await events.removeListener('test', onTest);
+                });
+                //let onTestSpy = sinon.spy(onTest);
+
+                let onTest2Count = 2;
+                let onTest2 = sinon.spy(async function(args){
+                    onTest2Count--;
+                    expect(args).to.eql({test: true, channel: 'test', eventId: 'newId'});
+
+                    if (onTest2Count === 0){
+                        await events.removeListener('test', onTest2);
+
+                        events.on('test', onTest);
+                        events.on('test', onTest2);
+                    } else if(onTest2Count === -1){
+                        expect(onTest.callCount).to.equal(2);
+                        expect(onTest2.callCount).to.equal(3);
+                        expect(disconnectSpy.callCount).to.equal(1);
+                        events.close();
+                        done();
+                    }
+                });
+
+                events.on('test', onTest);
+                events.on('test', onTest2);
+            })();
+        });
     });
 });
 
