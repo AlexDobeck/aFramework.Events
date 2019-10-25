@@ -18,6 +18,12 @@ This method will generate a new redis client (by using the blockingQueueClientFu
 ### async emit(eventName[, args])
 Emits the event and optional arguments object. Awaiting is optional unless you require a gaurntee that the event has been stored in redis before continuing.
 
+### async removeListener(eventName, listener)
+Unsubscribes or ends the redis connection for the specific listener+function. 
+
+### async off(eventName, listener)
+Alias for removeListener
+
 ### async close()
 Cleans up active redis connections and listeners.
 
@@ -80,5 +86,4 @@ log | a function which will be called with a string parameter containing Error i
 
 ## TODO:
 * Allow Queue listeners to provide failure status beyond throwing
-* Override removeListener
 * Publish on NPM
