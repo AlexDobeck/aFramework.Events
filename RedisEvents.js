@@ -87,7 +87,7 @@ class RedisEvents extends EventEmitter {
         }
         args.eventId = uuid();
         args.emittedAt = Date.now();
-        await this.pubClient.publish(event, args);
+        await this.pubClient.publish(event, JSON.stringify(args));
     }
 }
 

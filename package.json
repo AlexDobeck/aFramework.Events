@@ -1,6 +1,6 @@
 {
-  "name": "aFramework.Events",
-  "version": "0.2.0",
+  "name": "aframework.events",
+  "version": "0.3.0",
   "dependencies": {
     "assert-plus": "^1.0.0",
     "ioredis": "^4.14.1",
@@ -11,10 +11,7 @@
     "mocha": "^6.2.1",
     "sinon": "^7.5.0"
   },
-  "author": {
-    "name": "Alex Dobeck",
-    "email": "alex.dobeck@gmail.com"
-  },
+  "author": "Alex Dobeck <alex.dobeck@gmail.com>",
   "engines": {
     "node": ">=7.6"
   },
@@ -25,5 +22,21 @@
   },
   "scripts": {
     "test": "mocha ./tests/*"
-  }
+  },
+  "description": "This library provides two EventEmitters: RedisQueue and RedisEvents, providing easy Queues and Pub/Sub functionality for use in a multi-instance or a sever farm environment.",
+  "bugs": {
+    "url": "https://github.com/AlexDobeck/aFramework.Events/issues"
+  },
+  "homepage": "https://github.com/AlexDobeck/aFramework.Events#readme",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [
+    "events",
+    "redis",
+    "distributed",
+    "queue",
+    "pub/sub"
+  ]
 }

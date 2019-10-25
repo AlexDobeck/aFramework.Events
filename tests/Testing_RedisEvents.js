@@ -11,6 +11,8 @@ let subMock;
 
 let aEvents = require('../index');
 
+let guidRegex= '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}';
+
 beforeEach(()=>{
     clock = sinon.useFakeTimers({
         now: 1571328769626
@@ -59,10 +61,8 @@ describe('RedisEvents', function(){
             pubMock
                 .expects('publish')
                 .once()
-                .withExactArgs('test',
-                    {emittedAt:1571328769626, eventId:sinon.match(/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/), test:'args'});
-
-
+                .withExactArgs('test', sinon.match(new RegExp('{"test":"args","eventId":"'+ guidRegex +'","emittedAt":1571328769626}')));
+            
             events.emit('test', {test:"args"});
 
             done();
