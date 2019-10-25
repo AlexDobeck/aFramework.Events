@@ -90,4 +90,3 @@ log | a function which will be called with a string parameter containing Error i
 
 ## TODO:
 * Allow Queue listeners to provide failure status beyond throwing
-* Publish on NPM
