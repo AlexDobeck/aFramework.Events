@@ -29,7 +29,7 @@ Cleans up active redis connections and listeners.
 
 ## Basic Usage
 ```javascript
-let rQueue = new aEvents.RedisQueue({redis:{host:'127.0.0.1', port:'6379}}
+let rQueue = new aEvents.RedisQueue({redis:{host:'127.0.0.1', port:'6379'}}
 
 await rQueue.on('queue', (args) => {
   console.log(`#1 recieved queue job: ${JSON.stringify(args)}`);
@@ -42,7 +42,7 @@ rQueue.emit('queue', {arg1:'test'});
 // #1 recieved queue job: {"arg1":"test"}
 ```
 ```javascript
-let rEvents = new aEvents.RedisEvents({redis:{host:'127.0.0.1', port:'6379}}
+let rEvents = new aEvents.RedisEvents({redis:{host:'127.0.0.1', port:'6379'}}
 await rEvents.on('broadcast', (args) =>{
   console.log(`#1 recieved broadcast: ${JSON.stringify(args)}`);
 }
