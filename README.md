@@ -2,7 +2,7 @@
 
 This library provides two EventEmitters: RedisQueue and RedisEvents, providing easy Queues and Pub/Sub functionality for use in a multi-instance or a sever farm environment.
 
-RedisQueue provides Queuing functionality. Exactly one subscriber will recieve the event, if the listener fails to complete succesfully (throws an error or otherwise doesn't complete), the event will be requeued and free to grab by another (or the same) client.
+RedisQueue provides Queuing functionality. Exactly one subscribed process will recieve the event, if any listener on that process fails to completely process the event (throws an error) the event will be requeued and handled by another subscribed process.
 
 RedisEvents provides Pub/Sub functionality. Every subscriber will recieve every event which occurs while they are listening. 
 
@@ -13,7 +13,7 @@ To begin listening to redis a network/io call needs to be made. If this method i
 
 ### Queue.on(eventName, listener)
 When an event matching the eventName is emitted, the listener will be called and supplied the argument object.
-This method will generate a new redis client (by using the blockingQueueClientFunction) and wait on an entry to appear in redis, looping only when an event has been successfully processed. If an error is thrown in the listener, the event will not be removed, instead being requeued once the delay ends. This will also cause the listener to stop listening so to prevent the client from endlessly churning on a single event.
+This method will generate a new redis client (by using the blockingQueueClientFunction) and wait on an entry to appear in redis, looping only when an event has been successfully processed. If an error is thrown in a listener, the event will not be removed, instead being requeued once the delay ends. This will also cause the process to stop listening to prevent the client from endlessly churning a single event.
 
 ### async emit(eventName[, args])
 Emits the event and optional arguments object. Awaiting is optional unless you require a gaurntee that the event has been stored in redis before continuing.
@@ -29,30 +29,34 @@ Cleans up active redis connections and listeners.
 
 ## Basic Usage
 ```javascript
-let rQueue = new aEvents.RedisQueue({redis:{host:'127.0.0.1', port:'6379'}}
+let aEvents = require('aframework.events');
+
+let rQueue = new aEvents.RedisQueue({redis:{host:'127.0.0.1', port:'6379'}});
 
 await rQueue.on('queue', (args) => {
-  console.log(`#1 recieved queue job: ${JSON.stringify(args)}`);
-}
-await rEvents.on('queue', (args) =>{
-  console.log(`#2 recieved queue job: ${JSON.stringify(args)}`);
-}
+    console.log(`#1 recieved queue job: ${JSON.stringify(args)}`);
+});
+await rQueue.on('queue', (args) =>{
+    console.log(`#2 recieved queue job: ${JSON.stringify(args)}`);
+});
 
 rQueue.emit('queue', {arg1:'test'});
-// #1 recieved queue job: {"arg1":"test"}
+// #1 recieved queue job: {"arg1":"test","eventId":"4fb88d9b-8786-4654-9e3b-28a7f79fc266","emittedAt":1572026515983}
+// #2 recieved queue job: {"arg1":"test","eventId":"4fb88d9b-8786-4654-9e3b-28a7f79fc266","emittedAt":1572026515983}
 ```
 ```javascript
-let rEvents = new aEvents.RedisEvents({redis:{host:'127.0.0.1', port:'6379'}}
+let aEvents = require('aframework.events');
+let rEvents = new aEvents.RedisEvents({redis:{host:'127.0.0.1', port:'6379'}});
 await rEvents.on('broadcast', (args) =>{
-  console.log(`#1 recieved broadcast: ${JSON.stringify(args)}`);
-}
+    console.log(`#1 recieved broadcast: ${JSON.stringify(args)}`);
+});
 await rEvents.on('broadcast', (args) =>{
-  console.log(`#2 recieved broadcast: ${JSON.stringify(args)}`);
-}
+    console.log(`#2 recieved broadcast: ${JSON.stringify(args)}`);
+});
 
 rEvents.emit('broadcast', {arg2:'test'});
-//#1 recieved broadcast: {"arg2":"test"}
-//#2 recieved broadcast: {"arg2":"test"}
+// #1 recieved broadcast: {"arg2":"test","eventId":"f0ef26d6-aef6-4ee3-ab91-0445a0e75c36","emittedAt":1572026762102}
+//#2 recieved broadcast: {"arg2":"test","eventId":"f0ef26d6-aef6-4ee3-ab91-0445a0e75c36","emittedAt":1572026762102}
 
 ```
 
